@@ -4,7 +4,7 @@ We created a website for an IT company that is hiring new workers. The main func
 
 The project uses PHP to connect to the back-end of the server.
 
-#------------Contributors------------#
+# Contributors:
 Thanh Tai Tran
 Zekun Liu (Jack). 
 Austin 
