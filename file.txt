@@ -1,0 +1,359 @@
+if (isset($_GET["error"])){
+                  if ($_GET["error"] == ""){
+                  echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "emptyinput"){
+                    echo "<p class='error-message'>You must choose at least one skill</p>";
+                  }
+                  else if(($_GET["error"]) == "inv-firstname"){
+                    echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-lastname"){
+                    echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-dob"){
+                    echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-email"){
+                    echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-phone-num"){
+                    echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-address-2"){
+                    echo "<p class='error-message'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-suburb"){
+                    echo "<p class='error-message' style='padding-right: 45%;'></p>";
+                  }
+                  else if(($_GET["error"]) == "inv-states"){
+                    echo "<p class='error-message' style='padding-right: 45%;'></p>";
+                  }
+                }
+
+                /*#if users did not enter any data
+            if (EmptyData($JobType, $firstname, $lastname, $dob, $email, $gender, $phonenumber, 
+            $adone, $suburb, $states, $postcode, $skills) !== false){ 
+                $errMsg_jobtype = "<p class='error-message'>You have to choose a job</p>";
+                $errMsg_firstname = "<p class='error-message'>You must enter your first name</p>";
+            }
+            #if firstname is not maximum 20 alpha character
+            if (InvalidFirstName($firstname) !== false){
+                header("Location: apply.php?error=inv-firstname");
+                exit();
+            }
+            #if lastname is not maximum 20 alpha character
+            elseif (InvalidLastName($lastname) !== false){
+                header("Location: apply.php?error=inv-lastname");
+                exit();
+            }
+            #if date of birth is not valid 
+            if (InvalidDob($dob) !== false){
+                header("Location: apply.php?error=inv-dob");
+                exit();
+            }
+            #if address 1 is bigger than 40 characters
+            if (InvalidAddress1($adone) !== false){
+                header("Location: apply.php?error=inv-address-1");
+                exit();
+            }
+            #if address 2 is bigger than 40 characters
+            if (InvalidAddress2($adtwo) !== false){
+                header("Location: apply.php?error=inv-address-2");
+                exit();
+            }
+            #if suburb is bigger than 40 characters
+            if (InvalidSuburb($suburb)!== false) {
+                header("Location: apply.php?error=inv-suburb");
+                exit();
+            }
+            #if states is not chosen correctly
+            if (InvalidState($states) !== false){
+                header("Location: apply.php?error=inv-states");
+                exit();
+            }
+            #if postcode is not typed correctly
+            if (InvalidPostCode($postcode) !== false){
+                header("Location: apply.php?error=inv-states");
+                exit();
+            }
+            #if email is invalid
+            if (InvalidEmail($email) !== false){
+                header("Location: apply.php?error=inv-email");
+                exit();
+            }
+            #if phone number is invalid
+            if (InvalidPhone($phonenumber) !== false){
+                header("Location: apply.php?error=inv-phone-num");
+                exit();
+            }
+            #if "other skill" check box is checked and the textbox is empty//
+            if (EmptySkillbox($skills,$skillbox) !== false){
+                header("Location: apply.php?error=inv-skillbox");
+                exit();
+            }*/
+
+
+            $JobType = DataSanatiser($_POST["JobType"]);
+            $firstname = DataSanatiser($_POST["firstname"]);
+            $lastname = DataSanatiser($_POST["lastname"]);
+            $dob = DataSanatiser($_POST["dob"]);
+            $email = DataSanatiser($_POST["email"]);
+            $gender = DataSanatiser($_POST["gender"]);
+            $phonenumber = DataSanatiser($_POST["phonenumber"]);
+            $adone = DataSanatiser($_POST["adone"]);
+            $adtwo = DataSanatiser($_POST["adtwo"]);
+            $suburb = DataSanatiser($_POST["suburb"]);
+            $states = DataSanatiser($_POST["states"]);
+            $postcode = DataSanatiser($_POST["postcode"]);
+            $skills = DataSanatiser($_POST["skills"]);
+            $skillbox = DataSanatiser($_POST["skillbox"]);
+            $reason = DataSanatiser($_POST["reason"]);
+
+            function DataSanatiser($data){ 
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+            return $data;
+        }
+
+        function remove0($data){
+            if (substr((int)$data,0,1)=="0"){
+                $data = (int) substr($data, 1, 3);    
+            }
+            else{
+                $data = (int) $data;
+            }
+            return $data;
+        }
+
+        function JobTypeErrors($JobType){
+            $errorMsg_JobType = "";
+            if (empty($JobType)){
+                $errorMsg_JobType = "<p class='error-message'>You have to choose a job!</p>";
+            }
+            else if(!preg_match("/^[0-9]{5}$/", $JobType)){
+                $errorMsg_JobType = "<p class='error-message'>Your job reference number is invalid</p>";
+            }
+            else {
+                $errorMsg_JobType = "";
+            }
+            return $errorMsg_JobType;
+        }
+
+        function FirstNameErrors($firstname){
+            $errorMsg_FirstName = "";
+            if (empty($firstname)){
+                $errorMsg_FirstName = "<p class='error-message'>You must enter your first name!</p>";
+            }
+            else if (!preg_match("/^[A-Za-z ]{1,20}$/", $firstname)){
+                $errorMsg_FirstName = "<p class='error-message'>Your first name is invalid!</p>";
+            }
+            else{
+                $errorMsg_FirstName = "";
+            }
+            return $errorMsg_FirstName;
+        }
+
+        function LastNameErrors($lastname){
+            $errorMsg_LastName = "";
+            if (empty($lastname)){
+                $errorMsg_LastName = "<p class='error-message'>You must enter your last name!</p>";
+            }
+            else if (!preg_match("/^[A-Za-z ]{1,20}$/", $lastname)){
+                $errorMsg_LastName = "<p class='error-message'>Your last name is invalid!</p>";
+            }
+            else{
+                $errorMsg_LastName = "";
+            }
+            return $errorMsg_LastName;
+        }
+
+        function DoBErrors($dob){
+            $errorMsg_dob = "";
+            if (empty($dob)){
+                $errorMsg_dob = "<p class='error-message'>You must enter your date of birth!</p>";
+            }
+            else if (!preg_match("/^\d{1,2}\/\d{1,2}\/\d{4}$/", $dob)){
+                $errorMsg_dob = "<p class='error-message'>Your date of birth is invalid!</p>";
+            }
+            else{
+                /////Validate age/////
+                $dob_year = (int) substr($dob,-4); //take year from users and turn it into integer
+                $current_year = (int) date("Y"); //get current year
+                if(($current_year - $dob_year)>80 || ($current_year - $dob_year) < 15){ //make sure users are not below 15 or above 80
+                    $errorMsg_dob = "<p class='error-message'>You must be above 15 or below 80</p>";
+                }
+                else{
+                    $errorMsg_dob = "";
+                }
+            }  
+            return $errorMsg_dob;
+        }
+
+        function EmailErrors($email){
+            $errorMsg_Email = "";
+            if (empty($email)){
+                $errorMsg_Email = "<p class='error-message'>You must enter your email!</p>";
+            }
+            else if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                $errorMsg_Email = "<p class='error-message'>Your email is invalid!</p>";
+            }
+            else{
+                $errorMsg_Email = "";
+            }
+            return $errorMsg_Email;
+        }
+
+        function GendersErrors($gender){
+            $errorMsg_Gender = "";
+            if (empty($gender)){
+                $errorMsg_Gender = "<p class='error-message'>You must choose an option!</p>";
+            }
+            else{
+                $errorMsg_Gender = "";
+            }
+            return $errorMsg_Gender;
+        }
+
+        function PhoneErrors($phonenumber){
+            $errorMsg_phone = "";
+            if (empty($phonenumber)){
+                $errorMsg_phone = "<p class='error-message'>You must enter your phone number!</p>";
+            }
+            else if(!preg_match("/^[0-9 ]{8,12}$/", $phonenumber)){
+                $errorMsg_phone = "<p class='error-message'>Your phone number is invalid!</p>";
+            }
+            else{
+                $errorMsg_phone = "";
+            }
+            return $errorMsg_phone;
+        }
+
+        function CountryErrors($country){
+            $errorMsg_Country = "";
+            if ($country == "blank"){
+                $errorMsg_Country = "<p class='error-message' style='padding-right: 40%;'>You must choose your country!</p>";
+            }
+            else{
+                $errorMsg_Country = "";
+            }
+            return $errorMsg_Country;
+        }
+
+        function Address1Errors($adone){
+            $errorMsg_Address_1 = "";
+            if (empty($adone)){
+                $errorMsg_Address_1 = "<p class='error-message'>You must enter your address!</p>";
+            }
+            else if(strlen($adone) > 40){
+                $errorMsg_Address_1 = "<p class='error-message'>Your address must be less than 40 characters!</p>";
+            }
+            else{
+                $errorMsg_Address_1 = "";
+            }
+            return $errorMsg_Address_1;
+        }
+
+        function Address2Errors($adtwo){
+            $errorMsg_Address_2 = "";
+            if(strlen($adtwo) > 40){
+                $errorMsg_Address_2 = "<p class='error-message'>Your address must be less than 40 characters!</p>";
+            }
+            else{
+                $errorMsg_Address_2 = "";
+            }
+            return $errorMsg_Address_2;
+        }
+        function SuburbErrors($suburb){
+            $errorMsg_Suburb = "";
+            if (empty($suburb)){
+                $errorMsg_Suburb = "<p class='error-message' style='padding-right: 45%;'>You must enter your suburb!</p>";
+            }
+            else if(strlen($suburb) > 40){
+                $errorMsg_Suburb = "<p class='error-message' style='padding-right: 45%;'>Your suburb must be less than 40 characters!</p>";
+            }
+            else{
+                $errorMsg_Suburb= "";
+            }
+            return $errorMsg_Suburb;
+        }
+        function StateErrors($states){
+            $errorMsg_States = "";
+            if ($states == "blank"){
+                $errorMsg_States = "<p class='error-message' style='padding-right: 45%;'>You must choose a state!</p>";
+            }
+            else{
+                $errorMsg_States = "";
+            }
+            return $errorMsg_States;
+        }
+
+        function PostcodeErrors($postcode,$states){
+            $errorMsg_Postcode = "";
+            if (empty($postcode)){
+                $errorMsg_Postcode = "<p class='error-message' style='padding-right: 45%;'>You must enter your postcode!</p>";
+            }
+            else if(!preg_match("/^[0-9]{4}$/", $postcode)){
+                $errorMsg_Postcode = "<p class='error-message' style='padding-right: 45%;'>You postcode must be 4 digits numbers</p>";
+            }
+            else{
+                $postcode = remove0($postcode);
+                if (($states == "ACT" && (($postcode<200 || $postcode>299) && ($postcode<2600 || $postcode>2618) && ($postcode<2900 || $postcode>2920))) || 
+                    ($states == "NSW" && (($postcode<1000 || $postcode>1999) && ($postcode<2000 || $postcode>2599) && ($postcode<2619 || $postcode>2899) && ($postcode<2921 || $postcode>2999))) || 
+                    ($states == "VIC" && (($postcode<3000 || $postcode>3999) && ($postcode<8000 || $postcode>8999))) ||
+                    ($states == "QLD" && (($postcode<4000 || $postcode>4999) && ($postcode<9000 || $postcode>9999))) ||
+                    ($states == "SA" && (($postcode<5000 || $postcode>5799) && ($postcode<5800 || $postcode>5999))) ||
+                    ($states == "WA" && (($postcode<6000 || $postcode>6797) && ($postcode<6800 || $postcode>6999))) || 
+                    ($states == "TAS" && (($postcode<7000 || $postcode>7799) && ($postcode<7800 || $postcode>7999))) ||
+                    ($states == "NT" && (($postcode<800 || $postcode>899) && ($postcode<900 || $postcode>999))) ){
+
+                    $errorMsg_Postcode = "<p class='error-message' style='padding-right: 45%;'>Your postcode must match the states you choose!</p>";
+                }
+                else{
+                    $errorMsg_Postcode = "";
+                }    
+            }
+            return $errorMsg_Postcode;
+        }
+
+        function SkillsErrors($skills){
+            $errorMsg_Skills = "";
+            if (empty($skills)){
+                $errorMsg_Skills = "<p class='error-message'>You have to choose at least 1 skill!</p>";
+            }
+            else {
+                $errorMsg_Skills = "";
+            }
+            return $errorMsg_Skills;
+        }
+
+        function OtherSkillsErrors($skills, $skillbox){
+            $errorMsg_OtherSkills = "";
+            if ($skills == "6" && empty($skillbox)){
+                $errorMsg_OtherSkills = "<p class='error-message'>You must specify your other skills!</p>";
+            }
+            else {
+                $errorMsg_OtherSkills = "";
+            }
+            return $errorMsg_OtherSkills;
+        }
+
+        CREATE TABLE `EOI` (
+  `EOInumber` int(11) AUTO_INCREMENT PRIMARY KEY,
+  `JobRefNum` varchar(5) NOT NULL,
+  `firstname` varchar(20) NOT NULL,
+  `lastname` varchar(20) NOT NULL,
+  `dob` varchar(10) NOT NULL,
+  `gender` char(18) NOT NULL,
+  `streetaddress` char(40) NOT NULL,
+  `suburb` char(40) NOT NULL,
+  `state` varchar(3) NOT NULL,
+  `postcode` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phonenumber` bigint(12) UNSIGNED NOT NULL,
+  `reason` varchar(200) NOT NULL,
+  `Skills` varchar(200) DEFAULT NULL,
+  `otherskills` varchar(200) NOT NULL,
+  Status ENUM('New', 'Current', 'Final') DEFAULT 'New'
+);
